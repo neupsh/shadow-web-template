@@ -1,0 +1,46 @@
+== The Project
+
+
+=== Development
+. `yarn install`
+. `yarn watch`
+. You can access the shadow-cljs dashboard at http://localhost:9630/dashboard
+. Once the app is compiled you can access the app at http://localhost:8023/
+
+
+If you run `yarn server` instead, you can access the shadow-cljs dashboard
+at http://localhost:9630/dashboard and then enable the corresponding builds
+manually. I prefer running `main` and `workspaces` builds for development.
+When these builds are completed, you can reach them at:
+
+* Test build: http://localhost:8022/
+* Workspaces:
+** Main app: http://localhost:8023/
+** Workspaces: http://localhost:8023/workspaces/
+
+Note that running `test` or `workspaces` builds will compile `\*-test.cljs`
+and `*-ws.cljs` files only. So running `main` build along with either of them
+lets you compile all the code.
+
+
+=== Client REPL
+
+The shadow-cljs compiler starts an nREPL. It is configured to start on
+port 9000 (in `shadow-cljs.edn`).
+
+In IntelliJ: add a *remote* Clojure REPL configuration with
+host `localhost` and port `9000`.
+
+then something like:
+
+```clojure
+(shadow/nrepl-select :main)
+```
+
+will connect you to the REPL for a specific build (NOTE: Make sure you have
+a browser running the result, or your REPL won't have anything to talk to!)
+
+Now you can run:
+```clojure
+(js/alert "Hello from REPL!")
+```
