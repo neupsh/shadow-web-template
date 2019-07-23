@@ -1,6 +1,8 @@
 == The Project
 
 
+IMPORTANT: Don't forget to update the `config/firebase_config.cljs` with your own config values.
+
 === Development
 . `yarn install`
 . `yarn watch`
