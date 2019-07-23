@@ -5,6 +5,9 @@
  :deps {reagent {:mvn/version "0.8.1"}
         reagent-utils {:mvn/version "0.3.3"}
         re-frame {:mvn/version "0.10.6"}
+        com.degel/re-frame-firebase {:mvn/version "0.8.0"}
+
+        ;; for logging
         com.taoensso/timbre {:mvn/version "4.10.0"}
 
         ;; for routing

@@ -1,5 +1,0 @@
-{
-
- :taoensso.timbre/logging-config {:level :info}
-
- }

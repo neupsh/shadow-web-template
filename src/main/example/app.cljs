@@ -10,6 +10,8 @@
    [bidi.bidi :as bidi]
    [accountant.core :as accountant]
    [clerk.core :as clerk]
+   [example.firebase :as firebase]
+   [config.firebase-config :as fb-config]
    ))
 
 
@@ -24,6 +26,7 @@
                    ["/item-" :item-id] :a-item}
         "b-items" {"" :b-items
                    ["/item-" :item-id] :b-item}
+        "firebase-example" :firebase-example
         "about" :about
         "missing-route" :missing-route
         true :four-o-four}])
@@ -102,6 +105,10 @@
   (fn [] [:span.main
           [:h1 "About routing-example"]]))
 
+(defmethod page-contents :firebase-example []
+  (fn [] [:span.main
+          [firebase/ui]]))
+
 
 (defmethod page-contents :four-o-four []
   "Non-existing routes go here"
@@ -134,6 +141,7 @@ but it is not."]]))
       [:div
        [:header
         [:p#top [:a {:href (bidi/path-for app-routes :index)} "Go home"] " | "
+         [:a {:href (bidi/path-for app-routes :firebase-example)} "Firebase Example"] " | "
          [:a {:href (bidi/path-for app-routes :about)} "See about"] " | "
          [:a {:href "#bottom"} "Bottom of page"]]
         ^{:key page} [page-contents page]
@@ -144,6 +152,7 @@ but it is not."]]))
           [:p#bottom [:a {:href (bidi/path-for app-routes :index)} "Go home"] " | "
            [:a {:href (bidi/path-for app-routes :about)} "See about"] " | "
            [:a {:href "#top"} "Top of page"]]]]]])))
+
 
 #_(defn on-js-reload []
   (r/render-component [current-page]
@@ -178,6 +187,7 @@ but it is not."]]))
      :path-exists? (fn [path]
                      (boolean (bidi/match-route app-routes path)))})
   (accountant/dispatch-current!)
+  (firebase/init fb-config/configObject)
   ;(on-js-reload)
   (start)
   )
