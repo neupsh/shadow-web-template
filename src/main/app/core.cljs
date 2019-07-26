@@ -1,39 +1,29 @@
-(ns example.app
+(ns app.core
   (:require
    [reagent.core :as r]
    [reagent.session :as session]
    [re-frame.core :as rf]
    [taoensso.timbre :as log                                 ;:refer-macros [log trace debug info warn]
     ]
-   [example.db.events]
-   [example.db.subs]
+   [app.db.events]
+   [app.db.subs]
+   [app.ui.theme :as theme]
+   [app.ui.components.menubar :refer [MenuBar]]
+   [app.features.navigation :refer [app-routes navigate-to!]]
+   [app.ui.view :refer [page-contents]]
    [bidi.bidi :as bidi]
    [accountant.core :as accountant]
    [clerk.core :as clerk]
    ))
 
-
-
 (enable-console-print!)
 
 
-;; routes
-(def app-routes
-  ["/" {"" :index
-        "a-items" {"" :a-items
-                   ["/item-" :item-id] :a-item}
-        "b-items" {"" :b-items
-                   ["/item-" :item-id] :b-item}
-        "about" :about
-        "missing-route" :missing-route
-        true :four-o-four}])
-
-(defmulti page-contents identity)
 
 (defmethod page-contents :index []
   (fn []
     [:span.main
-     [:h1 "Welcome to routing-example"]
+     [:h1 "Welcome to sample app"]
      [:ul
       [:li [:a {:href (bidi/path-for app-routes :a-items)} "Lots of items of type A"]]
       [:li [:a {:href (bidi/path-for app-routes :b-items)} "Many items of type B"]]
@@ -44,7 +34,7 @@
       [:a {:href "https://github.com/juxt/bidi"} "Bidi"] ", "
       [:a {:href "https://github.com/venantius/accountant"} "Accountant"] " & "
       [:a {:href "https://github.com/PEZ/clerk"} "Clerk"]
-      ". Find this example on " [:a {:href "https://github.com/PEZ/reagent-bidi-accountant-example"} "Github"]]]))
+      ". Find this app on " [:a {:href "https://github.com/PEZ/reagent-bidi-accountant-app"} "Github"]]]))
 
 
 (defmethod page-contents :a-items []
@@ -100,7 +90,7 @@
 
 (defmethod page-contents :about []
   (fn [] [:span.main
-          [:h1 "About routing-example"]]))
+          [:h1 "About routing-app"]]))
 
 
 (defmethod page-contents :four-o-four []
@@ -128,10 +118,11 @@ but it is not."]]))
 ;; -------------------------
 ;; Page mounting component
 
-(defn current-page []
+(defn current-page [{:keys [classes] :as props}]
   (fn []
     (let [page (:current-page (session/get :route))]
-      [:div
+      [:div {:class (conj [] (.-root-component classes) "root-component")}
+       [MenuBar props]
        [:header
         [:p#top [:a {:href (bidi/path-for app-routes :index)} "Go home"] " | "
          [:a {:href (bidi/path-for app-routes :about)} "See about"] " | "
@@ -151,7 +142,7 @@ but it is not."]]))
 
 (defn mount-components []
   (rf/clear-subscription-cache!)
-  (r/render [current-page] (.getElementById js/document "app")))
+  (r/render (theme/with-default-theme current-page) (.getElementById js/document "app")))
 
 
 (defn start

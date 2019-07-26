@@ -1,5 +1,6 @@
-(ns example.ui.theme
+(ns app.ui.theme
   (:require
+    [reagent.core :as r]
     ["@material-ui/core" :as mui]
     ["@material-ui/core/styles" :refer [createMuiTheme withStyles]]
     ["@material-ui/core/colors" :as mui-colors]
@@ -93,7 +94,7 @@
 
             }))
 
-(defn wrap-component-with-styles
+(defn component-with-styles
   "Wraps the given component with material `withStyle` js function.
   component - reagent component
   styles    - function that returns a js object (clj->js on a map) given a `theme` object
@@ -103,10 +104,10 @@
 
 
 
-(defn wrap-with-default-theme
-  ([component] (wrap-with-default-theme component default-styles))
+(defn with-default-theme
+  ([component] (with-default-theme component default-styles))
   ([component style-fn]
    [:> mui/CssBaseline
     [:> mui/MuiThemeProvider
      {:theme (get-default-theme)}
-     [:> (wrap-component-with-styles component style-fn)]]]))
+     [:> (component-with-styles component style-fn)]]]))

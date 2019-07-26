@@ -1,4 +1,4 @@
-(ns example.hello-ws
+(ns app.hello-ws
   (:require [nubank.workspaces.core :as ws]
             [nubank.workspaces.card-types.react :as ct.react]))
 

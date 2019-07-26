@@ -1,4 +1,4 @@
-(ns example.db.subs
+(ns app.db.subs
   (:require [re-frame.core :refer [reg-sub]]))
 
 (reg-sub

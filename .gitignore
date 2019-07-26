@@ -11,13 +11,11 @@ out/
 pom.xml
 .idea/
 *.iml
-app/
 .cpcache
 /web-build
 
 
 *.class
-yarn.lock
 *.jar
 checkouts
 classes

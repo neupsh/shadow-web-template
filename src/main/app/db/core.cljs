@@ -1,4 +1,4 @@
-(ns example.db.core
+(ns app.db.core
   (:require [clojure.spec.alpha :as s]))
 
 ;; spec of app-db
