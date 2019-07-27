@@ -28,3 +28,8 @@
    ```
   "
   identity)
+
+
+(defmacro defpage
+  ""
+  [route props])

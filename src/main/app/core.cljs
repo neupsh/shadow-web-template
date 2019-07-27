@@ -14,6 +14,9 @@
    [bidi.bidi :as bidi]
    [accountant.core :as accountant]
    [clerk.core :as clerk]
+
+   ["@material-ui/core/Button" :default Button]
+
    ))
 
 (enable-console-print!)
@@ -21,7 +24,7 @@
 
 
 (defmethod page-contents :index []
-  (fn []
+  (fn [{:keys [classes] :as props}]
     [:span.main
      [:h1 "Welcome to sample app"]
      [:ul
@@ -29,6 +32,14 @@
       [:li [:a {:href (bidi/path-for app-routes :b-items)} "Many items of type B"]]
       [:li [:a {:href (bidi/path-for app-routes :missing-route)} "A Missing Route"]]
       [:li [:a {:href "/borken/link"} "A Borken Link"]]]
+     [:div
+      [:p "Some Material UI buttons as well :)"]
+      [:> Button {:variant "contained"
+                  :class (.-button classes)
+                  :on-click #(navigate-to! :a-items)} "A Items"]
+      [:> Button {:variant "text"
+                  :class (.-button classes)
+                  :on-click #(navigate-to! :b-items)} "B Items"]]
      [:p "Using "
       [:a {:href "https://reagent-project.github.io/"} "Reagent"] ", "
       [:a {:href "https://github.com/juxt/bidi"} "Bidi"] ", "
@@ -38,7 +49,7 @@
 
 
 (defmethod page-contents :a-items []
-  (fn []
+  (fn [{:keys [classes] :as props}]
     [:span.main
      [:h1 "The Lot of A Items"]
      [:div#red {:style {:width "50%" :height "200px" :background-color "red"}}]
@@ -60,7 +71,7 @@
 
 
 (defmethod page-contents :b-items []
-  (fn []
+  (fn [{:keys [classes] :as props}]
     [:span.main
      [:h1 "The Many B Items"]
      [:ul (map (fn [item-id]
@@ -71,7 +82,7 @@
 
 
 (defmethod page-contents :a-item []
-  (fn []
+  (fn [{:keys [classes] :as props}]
     (let [routing-data (session/get :route)
           item (get-in routing-data [:route-params :item-id])]
       [:span.main
@@ -80,7 +91,7 @@
 
 
 (defmethod page-contents :b-item []
-  (fn []
+  (fn [{:keys [classes] :as props}]
     (let [routing-data (session/get :route)
           item (get-in routing-data [:route-params :item-id])]
       [:span.main
@@ -89,13 +100,13 @@
 
 
 (defmethod page-contents :about []
-  (fn [] [:span.main
+  (fn [{:keys [classes] :as props}] [:span.main
           [:h1 "About routing-app"]]))
 
 
 (defmethod page-contents :four-o-four []
   "Non-existing routes go here"
-  (fn []
+  (fn [{:keys [classes] :as props}]
     [:span.main
      [:h1 "404: It is not here"]
      [:pre.verse
@@ -107,7 +118,7 @@ what does not exist?"]]))
 
 (defmethod page-contents :default []
   "Configured routes, missing an implementation, go here"
-  (fn []
+  (fn [{:keys [classes] :as props}]
     [:span.main
      [:h1 "404: My bad"]
      [:pre.verse
@@ -118,17 +129,18 @@ but it is not."]]))
 ;; -------------------------
 ;; Page mounting component
 
-(defn current-page [{:keys [classes] :as props}]
-  (fn []
-    (let [page (:current-page (session/get :route))]
+(defn current-page []
+  (fn [{:keys [classes] :as props}]
+    (let [page (:current-page (session/get :route))
+          page-component (page-contents page)]
       [:div {:class (conj [] (.-root-component classes) "root-component")}
        [MenuBar props]
        [:header
         [:p#top [:a {:href (bidi/path-for app-routes :index)} "Go home"] " | "
          [:a {:href (bidi/path-for app-routes :about)} "See about"] " | "
          [:a {:href "#bottom"} "Bottom of page"]]
-        ^{:key page} [page-contents page]
-        [:footer
+        ^{:key page}[page-component props]
+       [:footer
          [:div
           [:p "See also: " [:a {:href "https://github.com/neupsh/shadow-web-template"} "shadow-web-template github page"]]]
          [:div
@@ -136,9 +148,7 @@ but it is not."]]))
            [:a {:href (bidi/path-for app-routes :about)} "See about"] " | "
            [:a {:href "#top"} "Top of page"]]]]]])))
 
-#_(defn on-js-reload []
-  (r/render-component [current-page]
-    (. js/document (getElementById "app"))))
+
 
 (defn mount-components []
   (rf/clear-subscription-cache!)
