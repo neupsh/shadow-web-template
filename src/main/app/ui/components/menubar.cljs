@@ -110,4 +110,4 @@
   )
 
 (defn MenuBar [{:keys [classes] :as props}]
-  [:> (theme/component-with-styles MenuBarComponent menu-styles)])
+  [:> (theme/with-custom-styles MenuBarComponent menu-styles)])

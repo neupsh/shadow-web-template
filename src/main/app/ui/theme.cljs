@@ -83,18 +83,24 @@
   default-theme
   )
 
+(defn theme-spacing
+  ([theme] (theme-spacing theme 1))
+  ([theme unit] ((.. theme -spacing) unit)))
+
+
 (defn default-styles [theme]
-  (clj->js {:root-component {:marginLeft (.. theme -spacing -unit)
-                             :marginRight (.. theme -spacing -unit)}
-            :button {:margin (.. theme -spacing -unit)}
-            :textField {:width 200
-                        :marginLeft (.. theme -spacing -unit)
-                        :marginRight (.. theme -spacing -unit)}
-            :top-nav-toolbar-size (.. theme -mixins -toolbar)
+  (let [unit-spacing (theme-spacing theme)]
+    (clj->js {:.root-component {:marginLeft unit-spacing
+                                :marginRight unit-spacing}
+              :button {:margin unit-spacing}
+              :textField {:width 200
+                          :marginLeft unit-spacing
+                          :marginRight unit-spacing}
+              :top-nav-toolbar-size (.. theme -mixins -toolbar)
 
-            }))
+              })))
 
-(defn component-with-styles
+(defn with-custom-styles
   "Wraps the given component with material `withStyle` js function.
   component - reagent component
   styles    - function that returns a js object (clj->js on a map) given a `theme` object
@@ -110,4 +116,4 @@
    [:> mui/CssBaseline
     [:> mui/MuiThemeProvider
      {:theme (get-default-theme)}
-     [:> (component-with-styles component style-fn)]]]))
+     [:> (with-custom-styles component style-fn)]]]))
