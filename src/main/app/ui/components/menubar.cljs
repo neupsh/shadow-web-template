@@ -97,7 +97,8 @@
          [:> Badge {:badgeContent @(rf/subscribe [:notification-unread-count]) :color "secondary"}
           [:> NotificationsIcon]]]
 
-        [:> IconButton {:color "inherit"}
+        [:> IconButton {:color "inherit"
+                        :on-click #(rf/dispatch [:cycle-theme])}
          [:> InvertColorsIcon]]
 
         [:> IconButton {:color "inherit"}

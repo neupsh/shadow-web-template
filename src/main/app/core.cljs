@@ -22,7 +22,6 @@
 (enable-console-print!)
 
 
-
 (defmethod page-contents :index []
   (fn [{:keys [classes] :as props}]
     [:span.main
@@ -36,16 +35,36 @@
       [:p "Some Material UI buttons as well :)"]
       [:> Button {:variant "contained"
                   :class (.-button classes)
+                  :color :primary
                   :on-click #(navigate-to! :a-items)} "A Items"]
       [:> Button {:variant "text"
                   :class (.-button classes)
-                  :on-click #(navigate-to! :b-items)} "B Items"]]
+                  :color :primary
+                  :on-click #(navigate-to! :b-items)} "B Items"]
+      [:> Button {:variant "outlined"
+                  :class (.-button classes)
+                  :color :primary
+                  :on-click #(js/alert "cool you clicked!")} "Surprise!"]
+      [:> Button {:variant "contained"
+                  :class (.-button classes)
+                  :color :secondary
+                  :on-click #(navigate-to! :a-items)} "A Items"]
+      [:> Button {:variant "text"
+                  :class (.-button classes)
+                  :color :secondary
+                  :on-click #(navigate-to! :b-items)} "B Items"]
+      [:> Button {:variant "outlined"
+                  :class (.-button classes)
+                  :color :secondary
+                  :on-click #(js/alert "cool you clicked!")} "Surprise!"]]
      [:p "Using "
       [:a {:href "https://reagent-project.github.io/"} "Reagent"] ", "
       [:a {:href "https://github.com/juxt/bidi"} "Bidi"] ", "
       [:a {:href "https://github.com/venantius/accountant"} "Accountant"] " & "
       [:a {:href "https://github.com/PEZ/clerk"} "Clerk"]
       ". Find this app on " [:a {:href "https://github.com/PEZ/reagent-bidi-accountant-app"} "Github"]]]))
+
+
 
 
 (defmethod page-contents :a-items []
@@ -149,10 +168,12 @@ but it is not."]]))
            [:a {:href "#top"} "Top of page"]]]]]])))
 
 
+(defn themed-current-page []
+  (theme/with-theme (theme/with-custom-styles current-page theme/default-styles)))
 
 (defn mount-components []
   (rf/clear-subscription-cache!)
-  (r/render (theme/with-default-theme current-page) (.getElementById js/document "app")))
+  (r/render [themed-current-page] (.getElementById js/document "app")))
 
 
 (defn start
@@ -179,6 +200,7 @@ but it is not."]]))
      :path-exists? (fn [path]
                      (boolean (bidi/match-route app-routes path)))})
   (accountant/dispatch-current!)
+  ;(rf/dispatch [:set-theme :default-theme])
   ;(on-js-reload)
   (start)
   )
