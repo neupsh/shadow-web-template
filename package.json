@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "create-react-class": "^15.6.3",
-    "karma": "^4.2.0",
+    "karma": "^6.3.14",
     "karma-chrome-launcher": "^3.0.0",
     "karma-cljs-test": "^0.1.0",
     "react": "16.9.0",
